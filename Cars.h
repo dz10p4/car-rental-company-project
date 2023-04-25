@@ -1,7 +1,4 @@
 #include <iostream>
-
-#include <RentalData.h>
-
 using namespace std;
 
 class Cars 
@@ -25,5 +22,4 @@ class Cars
     int moneyMade;
 
     RentalData** carHistory;
-    
 };
