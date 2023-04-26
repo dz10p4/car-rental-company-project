@@ -12,6 +12,8 @@ class Client
         string dateOfRegistration;
     
     public:
+        Client();
+        ~Client();
         bool isActive = true;
         int numberOfRentals = 0;
         int numberOfCurrentlyRentedCars = 0;

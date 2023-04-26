@@ -10,6 +10,9 @@ class Employee
         string socialSecurityNumber;
 
     public:
+        Employee();
+        ~Employee();
+        
         bool isEmployed = true;
         float wage;
         int numberOfCarsRented = 0;

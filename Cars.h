@@ -13,6 +13,8 @@ class Cars
         string numberPlate;
         
     public:
+        Cars();
+        ~Cars();
         bool readyForRental = true;
         bool isRented = false;
 

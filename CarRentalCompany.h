@@ -20,6 +20,9 @@ class CarRentalCompany
         Employee** employees;
     
     public:
+        CarRentalCompany(string companyName);
+        ~CarRentalCompany();
+
         //Data aquiring methods
         string getCompanyName();
         int getCarFleetSize();
@@ -32,24 +35,27 @@ class CarRentalCompany
         Employee** getEmployeeArray();
 
         //Cars class methods
-        void addVehicle(string make, string model, string year, string numberPlate, int initialMileage);
+        void addVehicle(string make, string model, string year, string numberPlate, float initialMileage); 
         void retireVehicle(Cars* car);
         void rentVehicle(Cars* rentedCar, Employee* rentingEmployee, Client* rentingClient);
-        void returnVehicle(Cars* car, int serviceLength, int addedMileage);
+        void returnVehicle(Cars* car, int serviceLength, float addedMileage);
+        Cars* findByPlates(string numberPlates); 
         
         //Service class methods
         void sendCarForService(Cars* car, string serviceType, string sendDate);
         void returnCarFromService(Cars* car, float cost, string returnDate);
-        Service** getServiceHistoryOfCar(Cars* car);
+        Service** getServiceHistoryOfCar(Cars* car); 
 
         //Client class methods
         void registerClient(string name, string surname, string socialSecurityNumber, string dateOfRegistration);
         void removeClient(Client* client);
+        Client* findClientBySocialSecurityNumber(string socialSecurityNumber);
 
         //Employee class methods
         void hireEmployee(string name, string surname, string socialSecurityNumber, float wage);
         void fireEmployee(Employee* employee);
         void changeWage(Employee* employee, float newWage);
+        Employee* findEmployeeBySocialSecurityNumber(string socialSecurityNumber);
 
         //RentalData class methods
         RentalData** getRentalHistoryOfClient(Client* client);

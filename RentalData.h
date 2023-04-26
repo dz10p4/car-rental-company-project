@@ -21,6 +21,9 @@ class RentalData
         string rentalPeriod;
 
     public:
+        RentalData();
+        ~RentalData();
+
         Cars* getRentedCar();
         Client* getCarUser();
         Employee* getRentingEmployee();
