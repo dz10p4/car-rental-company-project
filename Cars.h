@@ -17,6 +17,7 @@ class Cars
         ~Cars();
         bool readyForRental = true;
         bool isRented = false;
+        float pricePerDay;
 
         float mileage;
         int numberOfDaysInService = 0;

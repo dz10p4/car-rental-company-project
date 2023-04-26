@@ -10,11 +10,11 @@ class CarRentalCompany
 {
     private:
         string companyName;
-        int carFleetSize;
-        int numberOfEmployees;
-        int numberOfClients;
-        float income;
-        float costs;
+        int carFleetSize = 0;
+        int numberOfEmployees = 0;
+        int numberOfClients = 0;
+        float income = 0;
+        float costs = 0;
         Cars** fleet;
         Client** clients;
         Employee** employees;
@@ -35,16 +35,16 @@ class CarRentalCompany
         Employee** getEmployeeArray();
 
         //Cars class methods
-        void addVehicle(string make, string model, string year, string numberPlate, float initialMileage); 
+        void addVehicle(string make, string model, string year, string numberPlate, float initialMileage, float pricePerDay);
         void retireVehicle(Cars* car);
-        void rentVehicle(Cars* rentedCar, Employee* rentingEmployee, Client* rentingClient);
+        void rentVehicle(Cars* rentedCar, Employee* rentingEmployee, Client* rentingClient, string rentalDate);
         void returnVehicle(Cars* car, int serviceLength, float addedMileage);
-        Cars* findByPlates(string numberPlates); 
+        Cars* findByPlates(string numberPlates);
         
         //Service class methods
         void sendCarForService(Cars* car, string serviceType, string sendDate);
         void returnCarFromService(Cars* car, float cost, string returnDate);
-        Service** getServiceHistoryOfCar(Cars* car); 
+        Service** getServiceHistoryOfCar(Cars* car);
 
         //Client class methods
         void registerClient(string name, string surname, string socialSecurityNumber, string dateOfRegistration);
