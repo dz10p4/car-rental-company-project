@@ -1,23 +1,25 @@
 #include <iostream>
+#include <RentalData.h>
+
 using namespace std;
 
 class Client 
 {
-    string name;
+    private:
+        string name;
+        string surname;
+        string socialSecurityNumber;
+        string dateOfRegistration;
+    
+    public:
+        bool isActive = true;
+        int numberOfRentals = 0;
+        int numberOfCurrentlyRentedCars = 0;
+        float moneySpent = 0;
+        RentalData** rentalHistory;
 
-    string surname;
-
-    string socialSecurityNumber;
-
-    string dateOfRegistration;
-
-    bool isActive;
-
-    int numberOfRentals;
-
-    int numberOfCurrentlyRentedCars;
-
-    int moneySpent;
-
-    Rental_Data** rentalHistory;
+        string getName();
+        string getSurname();
+        string getSocialSecutityNumber();
+        string getDateOfRegistration();
 };

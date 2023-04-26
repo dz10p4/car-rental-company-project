@@ -1,25 +1,32 @@
 #include <iostream>
+#include <RentalData.h>
+#include <Service.h>
+
 using namespace std;
 
 class Cars 
 {
-    string make;
+    private:
+        string make;
+        string model;
+        string year;
+        string numberPlate;
+        
+    public:
+        bool readyForRental = true;
+        bool isRented = false;
 
-    string model;
+        float mileage;
+        int numberOfDaysInService = 0;
+        int numberOfRentals = 0;
+        int numberOfServices = 0;
+        float moneyMade = 0;
 
-    string numberPlate;
+        RentalData** rentalHistory;
+        Service** serviceHistory;
 
-    bool inService;
-
-    bool isRented;
-
-    int mileage;
-
-    int numberOfDaysInService;
-
-    int numberOfRentals;
-
-    int moneyMade;
-
-    RentalData** carHistory;
+        string getMake();
+        string getModel();
+        string getYear();
+        string getNumberPlate();
 };
