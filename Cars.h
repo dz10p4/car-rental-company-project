@@ -13,7 +13,7 @@ class Cars
         string numberPlate;
         
     public:
-        Cars();
+        Cars(string make, string model, string year, string numberPlate);
         ~Cars();
         bool readyForRental = true;
         bool isRented = false;

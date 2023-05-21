@@ -83,7 +83,7 @@ int main()
     if(cmp->findByPlates("WX 35AWD")->readyForRental == false)
         cerr<<"error in readyForRental variable after returning car from service\n";
 
-    if(cmp->getServiceHistoryOfCar(cmp->findByPlates("WX 35AWD"))[0]->serviceType != "Cleaning" || cmp->getServiceHistoryOfCar(cmp->findByPlates("WX 35AWD"))[0]->lengthOfService != 2)
+    if(cmp->getServiceHistoryOfCar(cmp->findByPlates("WX 35AWD"))[0]->getServiceType() != "Cleaning" || cmp->getServiceHistoryOfCar(cmp->findByPlates("WX 35AWD"))[0]->getLengthOfService() != 2)
         cerr<<"error in servicehistory registry\n";
 
     cmp->returnVehicle(cmp->findByPlates("WY 323AD"), 5, 30.2);

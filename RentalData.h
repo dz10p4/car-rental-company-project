@@ -21,7 +21,7 @@ class RentalData
         string rentalPeriod;
 
     public:
-        RentalData();
+        RentalData(Cars* rentedCar, Client* carUser, Employee* rentingEmployee);
         ~RentalData();
 
         Cars* getRentedCar();
@@ -32,5 +32,4 @@ class RentalData
         float getDistanceCovered();
 
         string getRentalPeriod();
-        string getStatus();
 };
