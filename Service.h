@@ -9,7 +9,7 @@ class Service
         string servicePeriod;
         int lengthOfService;
     public:
-        Service();
+        Service(string serviceType);
         ~Service();
 
         string getServiceType();

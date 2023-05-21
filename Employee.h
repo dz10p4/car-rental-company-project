@@ -10,7 +10,7 @@ class Employee
         string socialSecurityNumber;
 
     public:
-        Employee();
+        Employee(string name, string surname, string socialSecurityNumber);
         ~Employee();
         
         bool isEmployed = true;

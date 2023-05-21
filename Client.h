@@ -12,7 +12,7 @@ class Client
         string dateOfRegistration;
     
     public:
-        Client();
+        Client(string name, string surname, string socialSecurityNumber, string dateOfRegistration);
         ~Client();
         bool isActive = true;
         int numberOfRentals = 0;

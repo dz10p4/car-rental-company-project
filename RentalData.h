@@ -15,21 +15,19 @@ class RentalData
         Client* carUser;
         Employee* rentingEmployee;
 
-        float incomeFromRental;
-        float distanceCovered;
-
         string rentalPeriod;
 
     public:
         RentalData(Cars* rentedCar, Client* carUser, Employee* rentingEmployee);
         ~RentalData();
+        
+        float incomeFromRental;
+        float distanceCovered;
+
 
         Cars* getRentedCar();
         Client* getCarUser();
         Employee* getRentingEmployee();
-
-        float getIncomeFromRental();
-        float getDistanceCovered();
 
         string getRentalPeriod();
 };

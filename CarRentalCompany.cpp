@@ -94,6 +94,8 @@ void CarRentalCompany::returnVehicle(Cars* car, int serviceLength, float addedMi
     }
 
     car->mileage += addedMileage;
+    car->rentalHistory[car->numberOfRentals]->distanceCovered = addedMileage;
+
     stringstream startDate(car->rentalHistory[car->numberOfRentals]->getRentalPeriod());
 
     struct tm date = {0, 0, 0};
@@ -110,11 +112,37 @@ void CarRentalCompany::returnVehicle(Cars* car, int serviceLength, float addedMi
 
     date.tm_year = stoi(inp) - 1900;
 
-    
+    time_t date_seconds = mktime( &date ) + (serviceLength * 24 * 60 * 60) ;
 
+    date = *localtime( &date_seconds );
+
+    car->rentalHistory[car->numberOfRentals]->getRentalPeriod() = car->rentalHistory[car->numberOfRentals]->getRentalPeriod() + " - " +to_string(date.tm_mday)+ "." +to_string(date.tm_mon + 1) + "." + to_string(date.tm_year);
+
+    car->rentalHistory[car->numberOfRentals]->incomeFromRental += car->pricePerDay * serviceLength;
+
+    car->numberOfRentals++;
+}
+
+
+Cars* CarRentalCompany::findByPlates(string numberPlates)
+{
+    for(int i=0 ; i<carFleetSize ; i++)
+    {
+        if(fleet[i]->getNumberPlate() == numberPlates)return fleet[i];
+    }
+    cout<<"No cars with such number plate found"<<endl;
+    return nullptr;
+}
+
+void CarRentalCompany::sendCarForService(Cars* car, string serviceType, string sendDate)
+{
 
 }
-Cars* CarRentalCompany::findByPlates(string numberPlates)
+void CarRentalCompany::returnCarFromService(Cars* car, float cost, string returnDate)
+{
+
+}
+Service** CarRentalCompany::getServiceHistoryOfCar(Cars* car)
 {
 
 }
