@@ -4,8 +4,6 @@
 #include <Cars.h>
 #include <Service.h>
 
-using namespace std;
-
 class CarRentalCompany 
 {
     private:
@@ -38,7 +36,7 @@ class CarRentalCompany
         void addVehicle(string make, string model, string year, string numberPlate, float initialMileage, float pricePerDay);
         void retireVehicle(Cars* car);
         void rentVehicle(Cars* rentedCar, Employee* rentingEmployee, Client* rentingClient, string rentalDate);
-        void returnVehicle(Cars* car, int serviceLength, float addedMileage);
+        void returnVehicle(Cars* car, string returnDate, float addedMileage);
         Cars* findByPlates(string numberPlates);
         
         //Service class methods
@@ -62,8 +60,8 @@ class CarRentalCompany
         RentalData** getRentalHistoryOfCar(Cars* car);
         RentalData** getRentalHistoryOfEmployee(Employee* employee);
         void getFinancialStatisticsForPeriod(string startDate, string endDate);
-        void getFinancialStatisticsOfCarForPeriod(Cars* car, string startDate, string endDate);
-        void getFinancialStatisticsOfClientForPeriod(Client* client, string startDate, string endDate);
-        void getFinancialStatisticsOfEmployeeForPeriod(Employee* employee, string startDate, string endDate);
-        void getMileageOfCarForPeriod(Cars* car, string startDate, string endDate);
+        pair<int, int> getFinancialStatisticsOfCarForPeriod(Cars* car, string startDate, string endDate);
+        pair<int, int> getFinancialStatisticsOfClientForPeriod(Client* client, string startDate, string endDate);
+        pair<int, int> getFinancialStatisticsOfEmployeeForPeriod(Employee* employee, string startDate, string endDate);
+        int getMileageOfCarForPeriod(Cars* car, string startDate, string endDate);
 };

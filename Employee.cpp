@@ -3,11 +3,12 @@
 
 using namespace std;
 
-Employee::Employee(string cname, string csurname, string csocialSecurityNumber)
+Employee::Employee(string cname, string csurname, string csocialSecurityNumber, float cwage)
 {
     name = cname;
     surname = csurname;
     socialSecurityNumber = csocialSecurityNumber;
+    wage = cwage;
 }
 
 Employee::~Employee()

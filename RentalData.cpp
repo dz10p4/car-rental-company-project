@@ -4,11 +4,12 @@
 using namespace std;
 
 
-RentalData::RentalData(Cars* crentedCar, Client* ccarUser, Employee* crentingEmployee)
+RentalData::RentalData(Cars* crentedCar, Client* ccarUser, Employee* crentingEmployee, float cemployeeWage)
 {
     rentedCar = crentedCar;
     carUser = ccarUser;
     rentingEmployee = crentingEmployee;
+    employeeWage = cemployeeWage;
 }
 
 RentalData::~RentalData()

@@ -1,6 +1,5 @@
 #include <iostream>
 #include <RentalData.h>
-using namespace std;
 
 class Employee 
 {
@@ -10,7 +9,7 @@ class Employee
         string socialSecurityNumber;
 
     public:
-        Employee(string name, string surname, string socialSecurityNumber);
+        Employee(string name, string surname, string socialSecurityNumber, float wage);
         ~Employee();
         
         bool isEmployed = true;

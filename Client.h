@@ -1,8 +1,6 @@
 #include <iostream>
 #include <RentalData.h>
 
-using namespace std;
-
 class Client 
 {
     private:

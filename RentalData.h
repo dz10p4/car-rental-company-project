@@ -6,19 +6,17 @@
 #include <Cars.h>
 #pragma endregion
 
-using namespace std;
-
 class RentalData 
 {
     private:
         Cars* rentedCar;
         Client* carUser;
         Employee* rentingEmployee;
-
+        float employeeWage;
         string rentalPeriod;
 
     public:
-        RentalData(Cars* rentedCar, Client* carUser, Employee* rentingEmployee);
+        RentalData(Cars* rentedCar, Client* carUser, Employee* rentingEmployee, float employeeWage);
         ~RentalData();
         
         float incomeFromRental;

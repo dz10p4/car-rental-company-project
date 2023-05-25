@@ -44,9 +44,9 @@ int main()
     if(cmp->getCarFleetSize() != 1)
         cerr<<"wrong fleet size after sending to service\n";
 
-    cmp->hireEmployee("Jack", "Sparrow", "213769420", 3400.34);
-    cmp->hireEmployee("Mick", "Jagger", "61121423",5332.23);
-    cmp->hireEmployee("Walter", "White", "135235", 15212.21);
+    cmp->hireEmployee("Jack", "Sparrow", "213769420", 20);
+    cmp->hireEmployee("Mick", "Jagger", "61121423", 35);
+    cmp->hireEmployee("Walter", "White", "135235", 22.5);
 
     if(cmp->findEmployeeBySocialSecurityNumber("61121423")->getName() != "Mick")
         cerr<<"error in finding employee by ss number\n";
@@ -61,7 +61,7 @@ int main()
     if(cmp->findClientBySocialSecurityNumber("21525152")->getSurname() != "Wexler")
         cerr<<"error in finding client by ss number\n";
 
-    cmp->changeWage(cmp->findEmployeeBySocialSecurityNumber("135235"),21541);
+    cmp->changeWage(cmp->findEmployeeBySocialSecurityNumber("135235"), 25.6);
     if(cmp->getEmployeeArray()[2]->wage != 21541)
         cerr<<"error in changing wage\n";
 
@@ -86,7 +86,7 @@ int main()
     if(cmp->getServiceHistoryOfCar(cmp->findByPlates("WX 35AWD"))[0]->getServiceType() != "Cleaning" || cmp->getServiceHistoryOfCar(cmp->findByPlates("WX 35AWD"))[0]->getLengthOfService() != 2)
         cerr<<"error in servicehistory registry\n";
 
-    cmp->returnVehicle(cmp->findByPlates("WY 323AD"), 5, 30.2);
+    cmp->returnVehicle(cmp->findByPlates("WY 323AD"), "30.04.2023", 30.2);
 
     if(cmp->findByPlates("WY 323AD")->isRented != false)
         cerr<<"error in isRented variable\n";

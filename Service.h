@@ -1,5 +1,4 @@
 #include <iostream>
-using namespace std;
 
 class Service
 {
@@ -16,4 +15,7 @@ class Service
         float getPrice();
         string getServicePeriod();
         int getLengthOfService();
+
+        void modifyLengthOfService(int newLength);
+        void appendServicePeriod(string returnDate);
 };

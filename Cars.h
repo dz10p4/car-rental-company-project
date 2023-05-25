@@ -2,8 +2,6 @@
 #include <RentalData.h>
 #include <Service.h>
 
-using namespace std;
-
 class Cars 
 {
     private:

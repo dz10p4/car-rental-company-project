@@ -29,3 +29,13 @@ int Service::getLengthOfService()
 {
     return lengthOfService;
 }
+
+void Service::modifyLengthOfService(int newLength)
+{
+    lengthOfService = newLength; 
+}
+
+void Service::appendServicePeriod(string returnDate)
+{
+    servicePeriod += " - " + returnDate;
+}
