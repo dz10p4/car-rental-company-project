@@ -85,6 +85,11 @@ int dateComparator(string first, string second)
     else return 0;
 }
 
+int countDaysInPeriod(string period)
+{
+    return findDateDifference(getFirstDate(period), getSecondDate(period));
+}
+
 CarRentalCompany::CarRentalCompany(string name)
 {
     this->companyName = name;
@@ -343,7 +348,31 @@ pair<int,int> CarRentalCompany::getFinancialStatisticsOfCarForPeriod(Cars* car, 
 
 pair<int,int> CarRentalCompany::getFinancialStatisticsOfClientForPeriod(Client* client, string startDate, string endDate)
 {
+    float earnings = 0, rentals = 0;
     
+    for(int i=0 ; i<client->numberOfRentals ; i++)
+    {
+        string begginingOfRental = getFirstDate(client->rentalHistory[i]->getRentalPeriod());
+        string endOfRental = getSecondDate(client->rentalHistory[i]->getRentalPeriod());
+        int dateDifference = countDaysInPeriod(client->rentalHistory[i]->getRentalPeriod());
+
+        if(dateComparator(begginingOfRental, startDate) < 1 && dateComparator(endOfRental, endDate) > -1)
+        {
+            earnings += findDateDifference(begginingOfRental, endOfRental) * client->rentalHistory[i]->incomeFromRental / dateDifference;
+            rentals++;
+        }
+        else if(dateComparator(endOfRental, endDate) > -1)
+        {
+            earnings += findDateDifference(startDate, endOfRental) * client->rentalHistory[i]->incomeFromRental / dateDifference;
+            rentals++;
+        }
+        else if(dateComparator(begginingOfRental, startDate) < 1)
+        {
+            earnings += findDateDifference(begginingOfRental ,endDate) * client->rentalHistory[i]->incomeFromRental / dateDifference;
+            rentals++;
+        }
+    }
+    return {earnings, rentals};
 }
 
 pair<int,int> CarRentalCompany::getFinancialStatisticsOfEmployeeForPeriod(Employee* employee, string startDate, string endDate)
