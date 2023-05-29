@@ -1,11 +1,13 @@
-#include <CarRentalCompany.h>
+#include "CarRentalCompany.h"
+#include "Currency.h"
+
 #include <iostream>
 #include <ctime>
 #include <sstream>
 
 using namespace std;
 
-int findDateDifference(string datea1, string datea2)
+int CarRentalCompany::findDateDifference(string datea1, string datea2)
 {
     struct tm date1, date2, *tptr;
     time_t datei1, datei2;
@@ -48,36 +50,50 @@ int findDateDifference(string datea1, string datea2)
     return difftime(datei2,datei1)/86400;
 }
 
-string getFirstDate(string date)
+int CarRentalCompany::stoif(string money)
+{
+    int result = 0;
+
+    for(int i=0 ; i<money.size() ; i++)
+    {
+        if(money[i]=='.')continue;
+        result+=money[i]-'0';
+        result *= 10;
+    }
+
+    return result/10;
+}
+
+string CarRentalCompany::getFirstDate(string date)
 {
     stringstream ss(date);
     string outp,newDate;
 
     getline(ss, newDate, '.');
-    outp+=newDate;
+    outp+=newDate + ".";
     getline(ss, newDate, '.');
-    outp+=newDate;
+    outp+=newDate + ".";
     getline(ss, newDate, ' ');
     outp+=newDate;
     return outp;
 }
 
-string getSecondDate(string date)
+string CarRentalCompany::getSecondDate(string date)
 {
     stringstream ss(date);
     string outp,newDate;
     getline(ss,newDate, '-');
     getline(ss,newDate,' ');
     getline(ss, newDate, '.');
-    outp+=newDate;
+    outp+=newDate + ".";
     getline(ss, newDate, '.');
-    outp+=newDate;
+    outp+=newDate + ".";
     getline(ss, newDate, ' ');
     outp+=newDate;
     return outp;
 }
 
-int dateComparator(string first, string second)
+int CarRentalCompany::dateComparator(string first, string second)
 {   
     int timeDifference = findDateDifference(first,second);
     if(timeDifference>0)return 1;
@@ -85,7 +101,7 @@ int dateComparator(string first, string second)
     else return 0;
 }
 
-int countDaysInPeriod(string period)
+int CarRentalCompany::countDaysInPeriod(string period)
 {
     return findDateDifference(getFirstDate(period), getSecondDate(period));
 }
@@ -97,6 +113,21 @@ CarRentalCompany::CarRentalCompany(string name)
 
 CarRentalCompany::~CarRentalCompany()
 {
+    for(auto I:fleet)
+    {
+        delete I;
+    }
+
+    for(auto I:clients)
+    {
+        delete I;
+    }
+
+    for(auto I:employees)
+    {
+        delete I;
+    }
+
     delete this;
 }
 
@@ -116,40 +147,49 @@ int CarRentalCompany::getNumberOfClients()
 {
     return numberOfClients;
 }
-float CarRentalCompany::getIncome()
+Currency CarRentalCompany::getIncome()
 {
     return income;
 }
-float CarRentalCompany::getCosts()
+Currency CarRentalCompany::getCosts()
 {
     return costs;
 }
-Cars** CarRentalCompany::getCarArray()
+vector<Cars*> CarRentalCompany::getCarArray()
 {
     return fleet;
 }
-Client** CarRentalCompany::getClientArray()
+vector<Client*> CarRentalCompany::getClientArray()
 {
     return clients;
 }
-Employee** CarRentalCompany::getEmployeeArray()
+vector<Employee*> CarRentalCompany::getEmployeeArray()
 {
     return employees;
 }
 
-void CarRentalCompany::addVehicle(string make, string model, string year, string numberPlate, float initialMileage, float pricePerDay)
+void CarRentalCompany::addVehicle(string make, string model, string year, string numberPlate, int initialMileage, string pricePerDay)
 {
-    fleet[carFleetSize] = new Cars(make, model, year, numberPlate);
+    fleet.push_back(new Cars(make, model, year, numberPlate));
     fleet[carFleetSize]->mileage = initialMileage;
-    fleet[carFleetSize]->pricePerDay = pricePerDay;
+    fleet[carFleetSize]->setPricePerDay(Currency(pricePerDay));
     carFleetSize++;
 }
 void CarRentalCompany::retireVehicle(Cars* car)
 {
+    if(car->isRented)
+    {
+        cout<<"You cannot retire a rented vehicle."<<endl;
+        return;
+    }
     car->readyForRental = false;
 }
 void CarRentalCompany::rentVehicle(Cars* rentedCar, Employee* rentingEmployee, Client* rentingClient, string rentalDate)
 {
+    if(rentedCar == nullptr || rentingEmployee == nullptr || rentingClient == nullptr)
+    {
+        return;
+    }
     if(!rentedCar->readyForRental)
     {
         cout<<"It is not possible to rent that car"<<endl;
@@ -166,14 +206,16 @@ void CarRentalCompany::rentVehicle(Cars* rentedCar, Employee* rentingEmployee, C
         return;
     }
     
+    
     rentedCar->isRented = true;
     rentedCar->readyForRental = false;
-    rentedCar->rentalHistory[rentedCar->numberOfRentals] = new RentalData(rentedCar, rentingClient, rentingEmployee, rentingEmployee->wage);
-    rentingEmployee->carsRented[rentingEmployee->numberOfCarsRented++] = rentedCar->rentalHistory[rentedCar->numberOfRentals];
-    rentingClient->rentalHistory[rentingClient->numberOfRentals++] = rentedCar->rentalHistory[rentedCar->numberOfRentals];
+    rentedCar->rentalHistory.push_back(new RentalData(rentedCar, rentingClient, rentingEmployee, rentingEmployee->wage, rentalDate));
+    rentingEmployee->carsRented.push_back(rentedCar->rentalHistory[rentedCar->numberOfRentals]);
+    rentingEmployee->numberOfCarsRented++;
+    rentingClient->rentalHistory.push_back(rentedCar->rentalHistory[rentedCar->numberOfRentals]);
     rentingClient->numberOfCurrentlyRentedCars++;
 }
-void CarRentalCompany::returnVehicle(Cars* car, string returnDate, float addedMileage)
+void CarRentalCompany::returnVehicle(Cars* car, string returnDate, int addedMileage)
 {
     if(!car->isRented)
     {
@@ -187,12 +229,18 @@ void CarRentalCompany::returnVehicle(Cars* car, string returnDate, float addedMi
     int serviceLength = findDateDifference(car->rentalHistory[car->numberOfRentals]->getRentalPeriod(), returnDate);
 
     car->numberOfDaysInService += serviceLength;
-    car->rentalHistory[car->numberOfRentals]->getRentalPeriod() +=  " - " + returnDate;
+    car->rentalHistory[car->numberOfRentals]->appendRentalPeriod(returnDate);
 
-    car->rentalHistory[car->numberOfRentals]->incomeFromRental += car->pricePerDay * serviceLength;
+    car->rentalHistory[car->numberOfRentals]->incomeFromRental += car->getPricePerDay() * serviceLength;
+
+    car->moneyMade += car->getPricePerDay() * serviceLength;
 
     car->rentalHistory[car->numberOfRentals]->getCarUser()->numberOfCurrentlyRentedCars--;
 
+    car->rentalHistory[car->numberOfRentals]->getCarUser()->numberOfRentals++;
+    car->isRented = false;
+    car->readyForRental = true;
+    income += car->getPricePerDay() * serviceLength;
     car->numberOfRentals++;
 }
 
@@ -207,9 +255,20 @@ Cars* CarRentalCompany::findByPlates(string numberPlates)
     return nullptr;
 }
 
+bool CarRentalCompany::checkIfThisCarIsInDatabase(string numberPlate)
+{
+    for(int i=0 ; i<carFleetSize ; i++)
+    {
+        if(fleet[i]->getNumberPlate() == numberPlate)
+        return 1;
+    }
+
+    return 0;
+}
+
 void CarRentalCompany::sendCarForService(Cars* car, string serviceType, string sendDate)
 {
-    if(car->isRented || car->readyForRental)
+    if(car->isRented || !car->readyForRental)
     {
         cout<<"You cannot send this car to service."<<endl;
         return;
@@ -217,25 +276,27 @@ void CarRentalCompany::sendCarForService(Cars* car, string serviceType, string s
     Service* serviceData = new Service(serviceType);
     
     car->readyForRental = false;
-    serviceData->getServicePeriod() = sendDate;
-    car->serviceHistory[car->numberOfServices] = serviceData;
+    serviceData->modifyServicePeriod(sendDate);
+    car->serviceHistory.push_back(serviceData);
 }
-void CarRentalCompany::returnCarFromService(Cars* car, float cost, string returnDate)
+void CarRentalCompany::returnCarFromService(Cars* car, string cost, string returnDate)
 {
-    car->serviceHistory[car->numberOfServices]->modifyLengthOfService(findDateDifference(car->serviceHistory[car->numberOfRentals]->getServicePeriod(), returnDate));
+    car->serviceHistory[car->numberOfServices]->modifyLengthOfService(findDateDifference(car->serviceHistory[car->numberOfServices]->getServicePeriod(), returnDate));
     car->serviceHistory[car->numberOfServices]->appendServicePeriod(returnDate);
-    costs += cost;
+    costs += Currency(cost);
+    car->serviceHistory[car->numberOfServices]->updatePrice(Currency(cost));
     car->numberOfServices++;
+    car->readyForRental = true;
 }
 
-Service** CarRentalCompany::getServiceHistoryOfCar(Cars* car)
+vector<Service*> CarRentalCompany::getServiceHistoryOfCar(Cars* car)
 {
     return car->serviceHistory;
 }
 
 void CarRentalCompany::registerClient(string name, string surname, string socialSecurityNumber, string dateOfRegistration)
 {
-    clients[numberOfClients] = new Client(name, surname, socialSecurityNumber, dateOfRegistration);
+    clients.push_back(new Client(name, surname, socialSecurityNumber, dateOfRegistration));
     numberOfClients++;
 }
 
@@ -254,9 +315,20 @@ Client* CarRentalCompany::findClientBySocialSecurityNumber(string socialSecurity
     return nullptr;
 }
 
-void CarRentalCompany::hireEmployee(string name, string surname, string socialSecurityNumber, float wage)
+bool CarRentalCompany::checkIfThisClientIsInDatabase(string socialSecurityNumber)
 {
-    employees[numberOfEmployees] = new Employee(name, surname, socialSecurityNumber, wage);
+    for(int i=0 ; i<numberOfClients ; i++)
+    {
+        if(clients[i]->getSocialSecutityNumber() == socialSecurityNumber)
+        return 1;
+    }
+
+    return 0;
+}
+
+void CarRentalCompany::hireEmployee(string name, string surname, string socialSecurityNumber, string wage)
+{
+    employees.push_back(new Employee(name, surname, socialSecurityNumber, Currency(wage)));
     numberOfEmployees++;
 }
 
@@ -265,9 +337,9 @@ void CarRentalCompany::fireEmployee(Employee* employee)
     employee->isEmployed = false;
 }
 
-void CarRentalCompany::changeWage(Employee* employee, float newWage)
+void CarRentalCompany::changeWage(Employee* employee, std::string newWage)
 {
-    employee->wage = newWage;
+    employee->wage = Currency(newWage);
 }
 
 Employee* CarRentalCompany::findEmployeeBySocialSecurityNumber(string socialSecurityNumber)
@@ -280,29 +352,35 @@ Employee* CarRentalCompany::findEmployeeBySocialSecurityNumber(string socialSecu
     return nullptr;
 }
 
-RentalData** CarRentalCompany::getRentalHistoryOfClient(Client* client)
+bool CarRentalCompany::checkIfThisEmployeeIsInDatabase(string socialSecurityNumber)
+{
+    for(int i=0 ; i<numberOfEmployees ; i++)
+    {
+        if(employees[i]->getSocialSecurityNumber() == socialSecurityNumber)
+        return 1;
+    }
+
+    return 0;
+}
+
+vector<RentalData*> CarRentalCompany::getRentalHistoryOfClient(Client* client)
 {
     return client->rentalHistory;
 }
 
-RentalData** CarRentalCompany::getRentalHistoryOfCar(Cars* car)
+vector<RentalData*> CarRentalCompany::getRentalHistoryOfCar(Cars* car)
 {
     return car->rentalHistory;
 }
 
-RentalData** CarRentalCompany::getRentalHistoryOfEmployee(Employee* employee)
+vector<RentalData*> CarRentalCompany::getRentalHistoryOfEmployee(Employee* employee)
 {
     return employee->carsRented;
 }
 
-void CarRentalCompany::getFinancialStatisticsForPeriod(string startDate, string endDate)
+pair<Currency, Currency> CarRentalCompany::getFinancialStatisticsOfCarForPeriod(Cars* car, string startDate, string endDate)
 {
-    
-}
-
-pair<int,int> CarRentalCompany::getFinancialStatisticsOfCarForPeriod(Cars* car, string startDate, string endDate)
-{
-    float earnings = 0, costs = 0;
+    Currency earnings, costs;
     
     for(int i=0 ; i<car->numberOfRentals ; i++)
     {
@@ -311,15 +389,15 @@ pair<int,int> CarRentalCompany::getFinancialStatisticsOfCarForPeriod(Cars* car, 
 
         if(dateComparator(begginingOfRental, startDate) < 1 && dateComparator(endOfRental, endDate) > -1)
         {
-            earnings += findDateDifference(begginingOfRental, endOfRental) * car->pricePerDay;
+            earnings += car->getPricePerDay() * findDateDifference(begginingOfRental, endOfRental) ;
         }
         else if(dateComparator(endOfRental, endDate) > -1)
         {
-            earnings += findDateDifference(startDate, endOfRental) * car->pricePerDay;
+            earnings += car->getPricePerDay() * findDateDifference(startDate, endOfRental) ;
         }
         else if(dateComparator(begginingOfRental, startDate) < 1)
         {
-            earnings += findDateDifference(begginingOfRental ,endDate) * car->pricePerDay;
+            earnings += car->getPricePerDay() * findDateDifference(begginingOfRental ,endDate);
         }
     }
 
@@ -342,13 +420,14 @@ pair<int,int> CarRentalCompany::getFinancialStatisticsOfCarForPeriod(Cars* car, 
         }
     }
 
-    cout<<"The car earned "<<earnings<<" and costed "<<costs<<" so the net income from the car was "<<earnings-costs<<endl;
+    cout<<"The car:\n"<<*car<<"earned "<<earnings<<" and costed "<<costs<<" so the net income from the car was "<<earnings-costs<<endl;
     return {earnings, costs};
 }
 
-pair<int,int> CarRentalCompany::getFinancialStatisticsOfClientForPeriod(Client* client, string startDate, string endDate)
+pair<Currency, int> CarRentalCompany::getFinancialStatisticsOfClientForPeriod(Client* client, string startDate, string endDate)
 {
-    float earnings = 0, rentals = 0;
+    Currency earnings; 
+    int rentals = 0;
     
     for(int i=0 ; i<client->numberOfRentals ; i++)
     {
@@ -358,29 +437,102 @@ pair<int,int> CarRentalCompany::getFinancialStatisticsOfClientForPeriod(Client* 
 
         if(dateComparator(begginingOfRental, startDate) < 1 && dateComparator(endOfRental, endDate) > -1)
         {
-            earnings += findDateDifference(begginingOfRental, endOfRental) * client->rentalHistory[i]->incomeFromRental / dateDifference;
+            earnings += (client->rentalHistory[i]->incomeFromRental / dateDifference) * findDateDifference(begginingOfRental, endOfRental) ;
             rentals++;
         }
         else if(dateComparator(endOfRental, endDate) > -1)
         {
-            earnings += findDateDifference(startDate, endOfRental) * client->rentalHistory[i]->incomeFromRental / dateDifference;
+            earnings += (client->rentalHistory[i]->incomeFromRental / dateDifference) * findDateDifference(startDate, endOfRental);
             rentals++;
         }
         else if(dateComparator(begginingOfRental, startDate) < 1)
         {
-            earnings += findDateDifference(begginingOfRental ,endDate) * client->rentalHistory[i]->incomeFromRental / dateDifference;
+            earnings += (client->rentalHistory[i]->incomeFromRental / dateDifference) * findDateDifference(begginingOfRental, endDate) ;
             rentals++;
         }
     }
+
+    cout<<"The client:\n"<<*client<<"rented "<<rentals<<" cars and payed the company "<<earnings<<" in total"<<endl;
     return {earnings, rentals};
 }
 
-pair<int,int> CarRentalCompany::getFinancialStatisticsOfEmployeeForPeriod(Employee* employee, string startDate, string endDate)
+pair<Currency, Currency> CarRentalCompany::getFinancialStatisticsOfEmployeeForPeriod(Employee* employee, string startDate, string endDate)
 {
+    Currency earnings, wage;
     
+    for(int i=0 ; i<employee->numberOfCarsRented ; i++)
+    {
+        string begginingOfRental = getFirstDate(employee->carsRented[i]->getRentalPeriod());
+        string endOfRental = getSecondDate(employee->carsRented[i]->getRentalPeriod());
+        int dateDifference = countDaysInPeriod(employee->carsRented[i]->getRentalPeriod());
+
+        if(dateComparator(begginingOfRental, startDate) < 1 && dateComparator(endOfRental, endDate) > -1)
+        {
+            earnings += (employee->carsRented[i]->incomeFromRental / dateDifference) * findDateDifference(begginingOfRental, endOfRental) ;
+            wage += employee->carsRented[i]->getEmployeeWage();
+        }
+        else if(dateComparator(endOfRental, endDate) > -1)
+        {
+            earnings += (employee->carsRented[i]->incomeFromRental / dateDifference) * findDateDifference(startDate, endOfRental);
+            wage += employee->carsRented[i]->getEmployeeWage();
+        }
+        else if(dateComparator(begginingOfRental, startDate) < 1)
+        {
+            earnings += (employee->carsRented[i]->incomeFromRental / dateDifference) * findDateDifference(begginingOfRental ,endDate);
+            wage += employee->carsRented[i]->getEmployeeWage();
+        }
+    }
+    cout<<"The employee:\n"<<*employee<<"rentals brought the company "<<earnings<<" of earnings and costed the company "<<wage<<endl;
+    return {earnings, wage};
 }
 
 int CarRentalCompany::getMileageOfCarForPeriod(Cars* car, string startDate, string endDate)
 {
-    
+    int mileage = 0;
+    for(int i=0 ; i<car->numberOfRentals ; i++)
+    {
+        string begginingOfRental = getFirstDate(car->rentalHistory[i]->getRentalPeriod());
+        string endOfRental = getSecondDate(car->rentalHistory[i]->getRentalPeriod());
+        int dateDifference = countDaysInPeriod(car->rentalHistory[i]->getRentalPeriod());
+
+        if(dateComparator(begginingOfRental, startDate) < 1 && dateComparator(endOfRental, endDate) > -1)
+        {
+            mileage += car->rentalHistory[i]->distanceCovered;
+        }
+        else if(dateComparator(endOfRental, endDate) > -1)
+        {
+            mileage += car->rentalHistory[i]->distanceCovered;
+        }
+        else if(dateComparator(begginingOfRental, startDate) < 1)
+        {
+            mileage += car->rentalHistory[i]->distanceCovered;
+        }
+    }
+    return mileage;
+}
+
+void CarRentalCompany::getFinancialStatisticsForPeriod(string startDate, string endDate)
+{
+    Currency earnings, costs;
+    int rentals = 0;
+    for(int i=0 ; i<carFleetSize ; i++)
+    {
+        pair<Currency, Currency> result = getFinancialStatisticsOfCarForPeriod(fleet[i], startDate, endDate);
+        earnings += result.first;
+        costs += result.second;
+    }
+
+    for(int i=0 ; i<numberOfClients ; i++)
+    {
+        pair<Currency, int> result = getFinancialStatisticsOfClientForPeriod(clients[i], startDate, endDate);
+        rentals += result.second;
+    }
+
+    for(int i=0 ; i<numberOfEmployees ; i++)
+    {
+        pair<Currency, Currency> result = getFinancialStatisticsOfEmployeeForPeriod(employees[i], startDate, endDate);
+        costs += result.second;
+    }
+
+    cout<<"During this period the company earned "<<earnings<<" making "<<rentals<<" rentals, and the expenses were "<<costs<<", so the company balance during this period is "<<earnings-costs<<endl;
 }

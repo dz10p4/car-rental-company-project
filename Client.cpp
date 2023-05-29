@@ -1,4 +1,4 @@
-#include <Client.h>
+#include "Client.h"
 #include <iostream>
 
 using namespace std;
@@ -16,19 +16,24 @@ Client::~Client()
     delete this;
 }
 
-string Client::getName()
+string Client::getName() const
 {
     return name;
 }
-string Client::getSurname()
+string Client::getSurname() const
 {
     return surname;
 }
-string Client::getSocialSecutityNumber()
+string Client::getSocialSecutityNumber() const
 {
     return socialSecurityNumber;
 }
-string Client::getDateOfRegistration()
+string Client::getDateOfRegistration() const
 {
     return dateOfRegistration;
+}
+
+ostream& operator<<(ostream& os, const Client& c)
+{
+    return os<<c.getName()<<" "<<c.getSurname()<<" "<<c.getSocialSecutityNumber()<<endl;
 }

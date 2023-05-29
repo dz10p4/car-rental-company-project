@@ -1,21 +1,29 @@
 #include <iostream>
 
+#pragma once
+#include "Currency.h"
+
+class Currency;
+
 class Service
 {
     private:
-        string serviceType;
-        float price;
-        string servicePeriod;
+        std::string serviceType;
+        Currency price;
+        std::string servicePeriod;
         int lengthOfService;
     public:
-        Service(string serviceType);
+        Service(std::string serviceType);
         ~Service();
 
-        string getServiceType();
-        float getPrice();
-        string getServicePeriod();
+        std::string getServiceType();
+        Currency getPrice();
+        std::string getServicePeriod();
         int getLengthOfService();
 
+        void updatePrice(Currency cprice);
+        
+        void modifyServicePeriod(std::string startDate);
         void modifyLengthOfService(int newLength);
-        void appendServicePeriod(string returnDate);
+        void appendServicePeriod(std::string returnDate);
 };

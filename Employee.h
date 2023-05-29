@@ -1,23 +1,33 @@
 #include <iostream>
-#include <RentalData.h>
+#include <vector>
+
+#pragma once
+#include "RentalData.h"
+#include "Currency.h"
+#pragma endregion
+
+class Currency;
+class RentalData;
 
 class Employee 
 {
     private:    
-        string name;
-        string surname;
-        string socialSecurityNumber;
+        std::string name;
+        std::string surname;
+        std::string socialSecurityNumber;
 
     public:
-        Employee(string name, string surname, string socialSecurityNumber, float wage);
+        Employee(std::string name, std::string surname, std::string socialSecurityNumber, Currency wage);
         ~Employee();
         
         bool isEmployed = true;
-        float wage;
+        Currency wage;
         int numberOfCarsRented = 0;
-        RentalData** carsRented;
+        std::vector<RentalData*> carsRented;
 
-        string getName();
-        string getSurname();
-        string getSocialSecurityNumber();
+        std::string getName() const;
+        std::string getSurname() const;
+        std::string getSocialSecurityNumber() const;
 };
+
+std::ostream& operator<<(std::ostream& os, const Employee& e);

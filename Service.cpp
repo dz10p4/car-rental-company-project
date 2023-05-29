@@ -1,5 +1,5 @@
-#include <Service.h>
 #include <iostream>
+#include "Service.h"
 
 using namespace std;
 
@@ -17,7 +17,7 @@ string Service::getServiceType()
 {
     return serviceType;
 }
-float Service::getPrice()
+Currency Service::getPrice()
 {
     return price;
 }
@@ -35,7 +35,17 @@ void Service::modifyLengthOfService(int newLength)
     lengthOfService = newLength; 
 }
 
+void Service::modifyServicePeriod(string startDate)
+{
+    servicePeriod = startDate;
+}
+
 void Service::appendServicePeriod(string returnDate)
 {
     servicePeriod += " - " + returnDate;
+}
+
+void Service::updatePrice(Currency cprice)
+{
+    price = cprice;
 }

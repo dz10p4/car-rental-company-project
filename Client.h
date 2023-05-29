@@ -1,25 +1,33 @@
 #include <iostream>
-#include <RentalData.h>
+#pragma once
+#include "RentalData.h"
+#include "Currency.h"
+#pragma endregion
+
+class RentalData;
+class Currency;
 
 class Client 
 {
     private:
-        string name;
-        string surname;
-        string socialSecurityNumber;
-        string dateOfRegistration;
+        std::string name;
+        std::string surname;
+        std::string socialSecurityNumber;
+        std::string dateOfRegistration;
     
     public:
-        Client(string name, string surname, string socialSecurityNumber, string dateOfRegistration);
+        Client(std::string name, std::string surname, std::string socialSecurityNumber, std::string dateOfRegistration);
         ~Client();
         bool isActive = true;
         int numberOfRentals = 0;
         int numberOfCurrentlyRentedCars = 0;
-        float moneySpent = 0;
-        RentalData** rentalHistory;
+        Currency moneySpent;
+        std::vector<RentalData*> rentalHistory;
 
-        string getName();
-        string getSurname();
-        string getSocialSecutityNumber();
-        string getDateOfRegistration();
+        std::string getName() const;
+        std::string getSurname() const;
+        std::string getSocialSecutityNumber() const;
+        std::string getDateOfRegistration() const;
 };
+
+std::ostream& operator<<(std::ostream& os, const Client& c);
