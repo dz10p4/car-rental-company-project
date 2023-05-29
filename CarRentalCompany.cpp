@@ -411,7 +411,7 @@ pair<Currency, Currency> CarRentalCompany::getFinancialStatisticsOfCarForPeriod(
         }
     }
 
-    cout<<"The car:\n"<<*car<<"earned "<<earnings<<" and costed "<<costs<<" so the net income from the car was "<<earnings-costs<<endl;
+    cout<<"The car:\n"<<*car<<"earned "<<earnings<<" and costed "<<costs<<" so the net income from the car was "<<earnings-costs<<endl<<endl;
     return {earnings, costs};
 }
 
@@ -443,7 +443,7 @@ pair<Currency, int> CarRentalCompany::getFinancialStatisticsOfClientForPeriod(Cl
         }
     }
 
-    cout<<"The client:\n"<<*client<<"rented "<<rentals<<" cars and payed the company "<<earnings<<" in total"<<endl;
+    cout<<"The client:\n"<<*client<<"rented "<<rentals<<" cars and payed the company "<<earnings<<" in total"<<endl<<endl;
     return {earnings, rentals};
 }
 
@@ -473,7 +473,7 @@ pair<Currency, Currency> CarRentalCompany::getFinancialStatisticsOfEmployeeForPe
             wage += employee->carsRented[i]->getEmployeeWage();
         }
     }
-    cout<<"The employee:\n"<<*employee<<"rentals brought the company "<<earnings<<" of earnings and costed the company "<<wage<<endl;
+    cout<<"The employee:\n"<<*employee<<"rentals brought the company "<<earnings<<" of earnings and costed the company "<<wage<<endl<<endl;
     return {earnings, wage};
 }
 
@@ -525,5 +525,5 @@ void CarRentalCompany::getFinancialStatisticsForPeriod(string startDate, string 
         costs += result.second;
     }
 
-    cout<<"During this period the company earned "<<earnings<<" making "<<rentals<<" rentals, and the expenses were "<<costs<<", so the company balance during this period is "<<earnings-costs<<endl;
+    cout<<"During this period the company earned "<<earnings<<" making "<<rentals<<" rentals, and the expenses were "<<costs<<", so the company balance during this period is "<<earnings-costs<<endl<<endl;
 }

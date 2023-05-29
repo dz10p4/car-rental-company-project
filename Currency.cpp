@@ -177,10 +177,11 @@ Currency Currency::operator+(Currency Money)
 Currency Currency::operator-(Currency Money)
 {
     int result = convertForCalc(getCurrency()) - convertForCalc(Money.getCurrency());
-    if(result<0) sign = "-";
+    string csign = "";
+    if(result<0) csign = "-";
     result = abs(result);
 
-    return Currency(sign+to_string(result/100)+'.'+to_string(result%100));
+    return Currency(csign+to_string(result/100)+'.'+to_string(result%100));
 }
 
 bool Currency::operator==(Currency Money)
