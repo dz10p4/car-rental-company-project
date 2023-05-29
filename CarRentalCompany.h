@@ -18,8 +18,6 @@ class CarRentalCompany
         int carFleetSize = 0;
         int numberOfEmployees = 0;
         int numberOfClients = 0;
-        Currency income;
-        Currency costs;
         std::vector<Cars*> fleet;
         std::vector<Client*> clients;
         std::vector<Employee*> employees;
@@ -33,8 +31,6 @@ class CarRentalCompany
         int getCarFleetSize();
         int getNumberOfEmployees();
         int getNumberOfClients();
-        Currency getIncome();
-        Currency getCosts();
         std::vector<Cars*> getCarArray();
         std::vector<Client*> getClientArray();
         std::vector<Employee*> getEmployeeArray();

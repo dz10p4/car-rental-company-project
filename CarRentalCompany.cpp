@@ -147,14 +147,6 @@ int CarRentalCompany::getNumberOfClients()
 {
     return numberOfClients;
 }
-Currency CarRentalCompany::getIncome()
-{
-    return income;
-}
-Currency CarRentalCompany::getCosts()
-{
-    return costs;
-}
 vector<Cars*> CarRentalCompany::getCarArray()
 {
     return fleet;
@@ -234,13 +226,13 @@ void CarRentalCompany::returnVehicle(Cars* car, string returnDate, int addedMile
     car->rentalHistory[car->numberOfRentals]->incomeFromRental += car->getPricePerDay() * serviceLength;
 
     car->moneyMade += car->getPricePerDay() * serviceLength;
+    car->rentalHistory[car->numberOfRentals]->getCarUser()->moneySpent += car->getPricePerDay() * serviceLength;
 
     car->rentalHistory[car->numberOfRentals]->getCarUser()->numberOfCurrentlyRentedCars--;
 
     car->rentalHistory[car->numberOfRentals]->getCarUser()->numberOfRentals++;
     car->isRented = false;
     car->readyForRental = true;
-    income += car->getPricePerDay() * serviceLength;
     car->numberOfRentals++;
 }
 
@@ -283,7 +275,6 @@ void CarRentalCompany::returnCarFromService(Cars* car, string cost, string retur
 {
     car->serviceHistory[car->numberOfServices]->modifyLengthOfService(findDateDifference(car->serviceHistory[car->numberOfServices]->getServicePeriod(), returnDate));
     car->serviceHistory[car->numberOfServices]->appendServicePeriod(returnDate);
-    costs += Currency(cost);
     car->serviceHistory[car->numberOfServices]->updatePrice(Currency(cost));
     car->numberOfServices++;
     car->readyForRental = true;
